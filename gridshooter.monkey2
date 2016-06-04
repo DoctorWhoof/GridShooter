@@ -29,13 +29,11 @@ Class Game Extends RenderWindow
 	Global scrollLimitY:Double = 60
 	Global cameraSpeed := 1.0
 	
-	Field hero:Player
-	Field orb:Orb
-	
+	Field hero:Player	
 	Field bg:Background
 	Field bgGrid:Background
 	Field smallFont:Font
-'   
+
 	Field colorTint:= New Color( 0.25, 1.0, 0.5 )
 		
 	Method New()					
@@ -89,6 +87,7 @@ Class Game Extends RenderWindow
 		Bullet.player = hero
 		Bullet.cullDistance = Width
 		
+		canvas.TextureFilteringEnabled = False	'New feature in v009
 	End
 	
 	
@@ -115,8 +114,11 @@ Class Game Extends RenderWindow
 
 		'Draw bg objects in three layers with different parallax
 		canvas.Alpha = 1.0
-		Parallax = 0.05
+		Parallax = 0.1
 		bg.Draw( canvas, 0, 0, 1.0, CameraRect )
+		
+		canvas.Alpha = 0.5
+		canvas.DrawText( "Monkey2 Side Scrolling Demo by Leo Santos. Press space to shoot!", 260, 100 )
 		
 		canvas.Alpha = 0.25
 		Parallax = 0.25
