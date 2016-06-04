@@ -6,8 +6,8 @@ Class Background Extends TileGraphics
 	Field total:Int
 
 	Method New( path:String, filter:Bool = True )
-		Local flags := TextureFlags.DefaultFlags
-		If Not filter Then flags &=~ TextureFlags.Filter
+		Local flags:TextureFlags = Null
+		If filter Then flags |= TextureFlags.Filter
 		
 		Local atlasTextture := Texture.Load( path, flags )
 		Assert( atlasTextture, " ~n ~nGameGraphics: Image " + path + " not found.~n ~n" )
