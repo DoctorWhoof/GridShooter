@@ -35,11 +35,13 @@ Class Game Extends RenderWindow
 	Field smallFont:Font
 
 	Field colorTint:= New Color( 0.25, 1.0, 0.5 )
+	
 		
 	Method New()					
 		Super.New( "Test", 420, 240, False, True )		'name, width, height, filterTextures, renderToTexture
 		Layout = "letterbox-int"
 	End
+	
 	
 	Method OnStart() Override
 		Actor.camera = camera
@@ -133,7 +135,6 @@ Class Game Extends RenderWindow
 		canvas.Color= Color.White
 		Actor.DrawAll( canvas )
 	End
-
 End
 
 
