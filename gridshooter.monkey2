@@ -32,11 +32,14 @@ Class Game Extends RenderWindow
 	Field hero:Player	
 	Field bg:Background
 	Field bgGrid:Background
+	Field heroSprite:Sprite
+	Field jetSprite:Sprite
+	Field orbSprite:Sprite
+	Field bulletSprite:Sprite
 	Field smallFont:Font
 
 	Field colorTint:= New Color( 0.25, 1.0, 0.5 )
 	
-		
 	Method New()					
 		Super.New( "Test", 420, 240, False, True )		'name, width, height, filterTextures, renderToTexture
 		Layout = "letterbox-int"
@@ -47,30 +50,31 @@ Class Game Extends RenderWindow
 		Actor.camera = camera
 	
 		'Load sprites & font
-		canvas.Font = Font.Load( "asset::classic_sans.ttf", 10 )
+		smallFont = Font.Load( "asset::classic_sans.ttf", 10 )
+		
 		bg = New Background( "asset::starfield.png", False )
 		bgGrid = New Background( "asset::grid.png", False )
 		
-		Local heroSprite := New Sprite( "asset::hero.png", 3, 32, 32, False )
+		heroSprite = New Sprite( "asset::hero.png", 3, 32, 32, False )
 		heroSprite.AddAnimationClip( "idle", New Int[]( 0 ) )
 		heroSprite.AddAnimationClip( "up", New Int[]( 1 ) )
 		heroSprite.AddAnimationClip( "down", New Int[]( 2 ) )
 		
-		Local jetSprite := New Sprite( "asset::jet.png", 2, 16, 16, False )
+		jetSprite = New Sprite( "asset::jet.png", 2, 16, 16, False )
 		jetSprite.AddAnimationClip( "idle", New Int[]( 0,1 ) )
 		jetSprite.frameRate = 30
 		
-		Local bulletSprite := New Sprite( "asset::bullet.png", 5, 32, 32, False )
+		bulletSprite = New Sprite( "asset::bullet.png", 5, 32, 32, False )
 		bulletSprite.AddAnimationClip( "idle", New Int[] ( 0 ) )
 		bulletSprite.AddAnimationClip( "hit", New Int[] ( 1,2,3,4 ), False )
 		bulletSprite.frameRate = 15
 		
-		Local orbSprite := New Sprite( "asset::orbSmall.png", 5, 16, 16, False )
+		orbSprite = New Sprite( "asset::orbSmall.png", 5, 16, 16, False )
 		orbSprite.AddAnimationClip( "idle", New Int[] ( 0,1,2,3 ) )
 		
 		'Create player sprite
 		hero = New Player( heroSprite )
-		
+				
 		'Create reusable enemy orbs
 		SeedRnd( 12345 )
 		Local offset:= 0
@@ -88,8 +92,6 @@ Class Game Extends RenderWindow
 		Next
 		Bullet.player = hero
 		Bullet.cullDistance = Width
-		
-		canvas.TextureFilteringEnabled = False	'New feature in v009
 	End
 	
 	
@@ -107,12 +109,24 @@ Class Game Extends RenderWindow
 		Actor.UpdateAll()
 		
 		'Display debug info
-		If Keyboard.KeyHit( Key.D ) Then debug = Not debug
+		If Keyboard.KeyHit( Key.D )
+			debug = Not debug
+			bg.debug = debug
+			bgGrid.debug = debug
+			heroSprite.debug = debug
+			orbSprite.debug = debug
+			Bullet.debug = debug		'this one draws the collider via Bullet.OnDraw()
+		End
+		
+		'Toggle render to texture
+		If Keyboard.KeyHit( Key.T ) Then renderToTexture = Not renderToTexture
 	End
 	
 	
 	Method OnDraw() Override
 		canvas.Color = colorTint
+		_windowCanvas.Font = smallFont
+		_textureCanvas.Font = smallFont
 
 		'Draw bg objects in three layers with different parallax
 		canvas.Alpha = 1.0
@@ -120,7 +134,7 @@ Class Game Extends RenderWindow
 		bg.Draw( canvas, 0, 0, 1.0, CameraRect )
 		
 		canvas.Alpha = 0.5
-		canvas.DrawText( "Monkey2 Side Scrolling Demo by Leo Santos. Press space to shoot!", 260, 100 )
+		canvas.DrawText( "Monkey2 Side Scrolling Demo by Leo Santos. Press space to shoot, 'T' to toggle render to texture and 'D' to display debug info.", 200, 100 )
 		
 		canvas.Alpha = 0.25
 		Parallax = 0.25

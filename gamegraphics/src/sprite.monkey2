@@ -48,9 +48,7 @@ Class Sprite Extends GameGraphics
 		Local _anim := animations.Get( anim )
 	
 		If debug Or Not _anim
-			Local w := images[ _frame ].Width
-			Local h := images[ _frame ].Height
-			DrawOutline( canvas, x, y, w, h , rotation, scaleX, scaleY )
+			DrawOutline( canvas, x, y, Width, Height , rotation, scaleX, scaleY )
 		End
 		If Not _anim
 			canvas.DrawText( "Sprite: AnimationClip '" + anim + "' is undefined", x, y )

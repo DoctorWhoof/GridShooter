@@ -1,8 +1,11 @@
 
 Class Bullet Extends Actor
 	
+	Global debug := False
+	
 	Method New( sprite:Sprite )
 		Super.New( sprite )
+		OnReset()
 		visible = False
 		speed = 15
 		name = "bullet"
@@ -12,7 +15,7 @@ Class Bullet Extends Actor
 		position.X += speed
 		collider.Position( position.X, position.Y )
 		If position.X > ( player.position.X + cullDistance ) Then visible = False
-		
+'   		
 		For Local other := Eachin Actor.catalog
 			If detectCollision
 				If other.visible And Not ( other.name = "bullet" ) And Not ( other = player )
@@ -28,6 +31,13 @@ Class Bullet Extends Actor
 			End
 		End
 		
+	End
+	
+	
+	Method OnDraw( canvas:Canvas ) Override
+		If debug
+			GameGraphics.DrawRectOutline( canvas, collider.Left, collider.Top, collider.Width, collider.Height )
+		End
 	End
 	
 	

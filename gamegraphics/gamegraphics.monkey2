@@ -9,8 +9,8 @@ Using std..
 Class GameGraphics Abstract
 
 	Field images		:Image[]	'The array containing all frames
-	Field debug := False
-		
+	Field debug := False		
+	
 	Protected
 	Field _handle:= New Vec2f
 	

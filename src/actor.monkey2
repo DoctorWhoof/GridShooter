@@ -1,7 +1,7 @@
 Class Actor
 
 	'******************************* Static Globals *******************************
-
+	
 	Global catalog := New Stack<Actor>
 	Global bulletPool := New Stack<Bullet>
 	
@@ -27,6 +27,7 @@ Class Actor
 	
 	'******************************* Protected fields *******************************
 	
+	Protected	
 	Field _hide := False
 	Field _hideTimer := 0
 	Field _hideTimerStart := 0
@@ -34,6 +35,7 @@ Class Actor
 	
 	'******************************* Public methods *******************************
 		
+	Public
 	Method New( sprite:Sprite )
 		Self.sprite = sprite
 		catalog.Push( Self )
@@ -79,7 +81,6 @@ Class Actor
 		For Local a := Eachin catalog
 			If a.visible
 				a.sprite.Draw( canvas, a.anim, a.position.X, a.position.Y )
-'   				GameGraphics.DrawRectOutline( canvas, a.collider.Left, a.collider.Top, a.collider.Width, a.collider.Height )
 				a.OnDraw( canvas )
 			End
 		Next

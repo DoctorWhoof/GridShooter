@@ -25,7 +25,7 @@ Class Player Extends Actor
 			bullet.Reset()
 			bullet.visible = True
 			bullet.position.X = position.X
-			bullet.position.Y = position.Y + 4
+			bullet.position.Y = position.Y + 4			
 			currentBullet += 1
 			If currentBullet > 9 Then currentBullet = 0
 		End
