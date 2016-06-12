@@ -135,7 +135,6 @@ Class RenderWindow Extends Window
 		
 		Self.renderToTexture = renderToTexture
 		Self.filterTextures = filterTextures
-		
 	End
 	
 
