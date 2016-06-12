@@ -43,7 +43,7 @@ Class Game Extends RenderWindow
 	Field colorTint:= New Color( 0.25, 1.0, 0.5 )
 	
 	Method New()					
-		Super.New( "Test", 420, 240, False, False )		'name, width, height, filterTextures, renderToTexture
+		Super.New( "Test", 420, 240, False, True )		'name, width, height, filterTextures, renderToTexture
 		Layout = "letterbox-int"
 	End
 	
@@ -74,11 +74,6 @@ Class Game Extends RenderWindow
 		orbSprite = New Sprite( "asset::orbSmall.png", 5, 16, 16, False )
 		orbSprite.AddAnimationClip( "idle", New Int[] ( 0,1,2,3 ) )
 		
-		'Create player sprite
-		jet = New Actor( jetSprite )
-		hero = New Player( heroSprite )
-		hero.jet = jet
-		
 		'Create reusable enemy orbs
 		SeedRnd( 12345 )
 		Local offset:= 0
@@ -96,8 +91,11 @@ Class Game Extends RenderWindow
 		Next
 		Bullet.player = hero
 		Bullet.cullDistance = Width
-		
-		ToggleDebug()
+
+		'Create player sprite
+		jet = New Actor( jetSprite )
+		hero = New Player( heroSprite )
+		hero.jet = jet
 	End
 	
 	
