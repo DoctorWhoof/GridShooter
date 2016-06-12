@@ -194,7 +194,8 @@ Class RenderWindow Extends Window
 		_textureCanvas.Color = Color.White
 		_windowCanvas.Color = Color.White
 		
-		'Finishes timing the current render before messages are displayed (not 100% accurate, but good enough)
+		'Finishes timing the current render before messages are displayed
+		_windowCanvas.Flush()
 		_renderDuration = ( Microsecs() - _lastRenderStart ) / 1000.0
 		
 		'Draw message stack, then clear it every frame
@@ -285,7 +286,7 @@ Class RenderWindow Extends Window
 	End
 	
 	Method DebugInfo() Virtual
-		Echo( "Update time: " + Cast<String>( _updateDuration ).Slice( 0, 4 ) + "ms, Render time:" + Cast<String>( _renderDuration ).Slice( 0, 4 ) + "ms")
+		Echo( "Update time: " + Cast<String>( _updateDuration ).Slice( 0, 4 ) + "ms, Render time:" + Cast<String>( _renderDuration ).Slice( 0, 4 ) + "ms" )
 		Echo( "Window resolution: " + Frame.Width + ", " + Frame.Height )
 		Echo( "Virtual resolution: " + Width + ", " + Height )
 		Echo( "Camera: " + camera.ToString() )

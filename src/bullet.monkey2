@@ -15,7 +15,7 @@ Class Bullet Extends Actor
 		position.X += speed
 		collider.Position( position.X, position.Y )
 		If position.X > ( player.position.X + cullDistance ) Then visible = False
-'   		
+   		
 		For Local other := Eachin Actor.catalog
 			If detectCollision
 				If other.visible And Not ( other.name = "bullet" ) And Not ( other = player )
@@ -30,7 +30,6 @@ Class Bullet Extends Actor
 				End
 			End
 		End
-		
 	End
 	
 	

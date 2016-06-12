@@ -56,8 +56,6 @@ Class Actor
 		OnReset()
 	End
 	
-	
-	
 	'******************************* Static functions *******************************
 
 	Function UpdateAll()

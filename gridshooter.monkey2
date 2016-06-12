@@ -89,13 +89,14 @@ Class Game Extends RenderWindow
 			Local b := New Bullet( bulletSprite )
 			Actor.bulletPool.Push( b )
 		Next
-		Bullet.player = hero
-		Bullet.cullDistance = Width
 
 		'Create player sprite
 		jet = New Actor( jetSprite )
 		hero = New Player( heroSprite )
 		hero.jet = jet
+		
+		Bullet.cullDistance = Width
+		Bullet.player = hero
 	End
 	
 	
