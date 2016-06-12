@@ -139,7 +139,7 @@ Class RenderWindow Extends Window
 	End
 	
 
-	Method OnRender( windowCanvas:Canvas ) Override
+	Method OnRender( windowCanvas:Canvas ) Override Final
 		App.RequestRender()
 		Self._windowCanvas = windowCanvas
 		
