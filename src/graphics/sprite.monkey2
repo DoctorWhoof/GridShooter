@@ -7,6 +7,7 @@ Class Sprite Extends GameGraphics
 	
 	Field animations := New StringMap< AnimationClip >		'List of available animation clips
 	
+	
 	Private
 	
 	Field _time:Int					'main time. Can be overriden in the Draw() method.
@@ -20,7 +21,7 @@ Class Sprite Extends GameGraphics
 
 	Public
 	
-	'************************************* Instance Properties *************************************
+	'************************************* Public Properties *************************************
 	
 	'Current frame
 	Property Frame:Int()
@@ -28,7 +29,7 @@ Class Sprite Extends GameGraphics
 	End
 
 
-	'************************************* Instance Methods *************************************
+	'************************************* Public Methods *************************************
 
 	'Loads images[] and initializes itself
 	Method New( ImagePath:String, Totalframes:Int=1, cellWidth:Int, cellHeight:Int, filter:Bool = True )
@@ -71,6 +72,11 @@ Class Sprite Extends GameGraphics
 		End
 		
 		_frame = _anim.frame[ _clampedListFrame ]
+		
+		If pixelPerfect
+			x = Round( x )
+			y = Round( y )
+		End
 
 		If images
 			canvas.DrawImage( images[ _frame ], x, y, rotation, scaleX, scaleY )
@@ -84,7 +90,7 @@ Class Sprite Extends GameGraphics
 		Local a := animations.Get( anim )
 		If Not a Then Return 0
 		_period = ( 1000 / frameRate ) / timeScale
-		Return _period * a.Count()				
+		Return _period * a.Count			
 	End	
 	
 	'Adds new animation clips. Won't draw anything until you create at least one animation clip
@@ -100,14 +106,14 @@ End
 
 '*******************************************************************'
 
-'AnimationClips contain a sequence of frames to be played
+'AnimationClips contain a sequence of frame numbers to be played
 Class AnimationClip
 
 	field id			:String			'Animation name
 	field frame 		:Int[]			'Frame list array, contains the sequence in which the frames play
 	field loop			:= True			'looping can be controlled per animation
 
-	Method Count:Int()
+	Property Count:Int()
 		Return frame.Length
 	End
 

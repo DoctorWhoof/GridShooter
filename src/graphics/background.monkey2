@@ -26,6 +26,10 @@ Class Background Extends TileGraphics
 				local absY := ( tY * tileHeight ) + y
 				If images[0]
 					total += 1
+					If pixelPerfect
+						absX = Round( absX )
+						absY = Round( absY )
+					End
 					canvas.DrawImage( images[0], absX, absY, 0, scale, scale )
 					If debug
 						DrawRectOutline( canvas, absX, absY, tileWidth, tileHeight )

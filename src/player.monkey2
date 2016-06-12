@@ -3,6 +3,8 @@ Class Player Extends Actor
 	Field  oldY:Double
 	Field limitY:Double = 180
 	
+	Field jet:Actor
+		
 	Method New( sprite:Sprite )
 		Super.New( sprite )
 		name = "player"
@@ -41,5 +43,10 @@ Class Player Extends Actor
 			anim = "idle"
 		End
 		oldY = position.Y
+		
+		If jet
+			jet.position.X = position.X - 14
+			jet.position.Y = position.Y + 3
+		End
 	End
 End

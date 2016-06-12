@@ -19,6 +19,7 @@ Class RenderWindow Extends Window
 	Field canvas :Canvas						'Main canvas currently in use
 	Field camera :Area<Double>					'Camera coordinates
 	
+	Field paused := False						'Pauses update but still renders
 	Field renderToTexture := False				'Causes all canvas rendering to be directed to a fixed size texture
 	Field filterTextures := True				'Turns on/off texture smoothing. Off for pixel art.
 	Field bgColor := Color.DarkGrey				'Background color
@@ -161,7 +162,7 @@ Class RenderWindow Extends Window
 		
 		'Calls OnUpdate()
 		_lastUpdateStart = Microsecs()
-		SendUpdateEvent()
+		If Not paused Then SendUpdateEvent()
 		
 		'Mouse in world coordinates
 		_mouse = TransformPointFromView( App.MouseLocation, Null )
@@ -197,7 +198,6 @@ Class RenderWindow Extends Window
 		_renderDuration = ( Microsecs() - _lastRenderStart ) / 1000.0
 		
 		'Draw message stack, then clear it every frame
-'   		If debug Then DebugInfo()
 		DebugInfo()
 		Local y := 2
 		For Local t := Eachin _echoStack
@@ -216,8 +216,13 @@ Class RenderWindow Extends Window
 		End
 		
 		'App quit
-		If ( Keyboard.KeyHit( Key.Escape ) ) 
+		If Keyboard.KeyHit( Key.Escape )
 			App.Terminate()
+		End
+		
+		'Pause
+		If Keyboard.KeyHit( Key.P )
+			paused = Not paused
 		End
 	End
 	
@@ -251,11 +256,10 @@ Class RenderWindow Extends Window
 		_parallaxCam.Width = width
 		_parallaxCam.Height = height
 		
-		_renderTexture = New Texture( width, height, PixelFormat.RGBA32, _flags )
+		_renderTexture = New Texture( width, height, PixelFormat.RGBA32, _flags | TextureFlags.Dynamic )
 		_renderImage = New Image( _renderTexture )
 		_renderImage.Handle=New Vec2f( 0, 0 )
 		_textureCanvas = New Canvas( _renderImage )
-'   		_textureCanvas.Font = App.DefaultFont
 
 		_windowCanvas.TextureFilteringEnabled = filterTextures
 		_textureCanvas.TextureFilteringEnabled = filterTextures
@@ -281,7 +285,7 @@ Class RenderWindow Extends Window
 	End
 	
 	Method DebugInfo() Virtual
-		Echo( "Update time: " + Cast<String>( _updateDuration ).Slice( 0, 5 ) + "ms, Render time:" + Cast<String>( _renderDuration ).Slice( 0, 5 ) + "ms")
+		Echo( "Update time: " + Cast<String>( _updateDuration ).Slice( 0, 4 ) + "ms, Render time:" + Cast<String>( _renderDuration ).Slice( 0, 4 ) + "ms")
 		Echo( "Window resolution: " + Frame.Width + ", " + Frame.Height )
 		Echo( "Virtual resolution: " + Width + ", " + Height )
 		Echo( "Camera: " + camera.ToString() )

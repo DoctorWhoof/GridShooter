@@ -29,9 +29,11 @@ Class Game Extends RenderWindow
 	Global scrollLimitY:Double = 60
 	Global cameraSpeed := 1.0
 	
-	Field hero:Player	
+	Field hero:Player
+	Field jet:Actor
 	Field bg:Background
 	Field bgGrid:Background
+	
 	Field heroSprite:Sprite
 	Field jetSprite:Sprite
 	Field orbSprite:Sprite
@@ -50,7 +52,7 @@ Class Game Extends RenderWindow
 		Actor.camera = camera
 	
 		'Load sprites & font
-		smallFont = Font.Load( "asset::classic_sans.ttf", 10 )
+		smallFont = Font.Load( "asset::classic_sans.ttf", 10, Null )
 		
 		bg = New Background( "asset::starfield.png", False )
 		bgGrid = New Background( "asset::grid.png", False )
@@ -73,8 +75,10 @@ Class Game Extends RenderWindow
 		orbSprite.AddAnimationClip( "idle", New Int[] ( 0,1,2,3 ) )
 		
 		'Create player sprite
+		jet = New Actor( jetSprite )
 		hero = New Player( heroSprite )
-				
+		hero.jet = jet
+		
 		'Create reusable enemy orbs
 		SeedRnd( 12345 )
 		Local offset:= 0
@@ -125,22 +129,23 @@ Class Game Extends RenderWindow
 
 		'Draw bg objects in three layers with different parallax
 		canvas.Alpha = 1.0
-		Parallax = 0.1
+		Parallax = 0.05
 		bg.Draw( canvas, 0, 0, 1.0, CameraRect )
 		
 		canvas.Alpha = 0.5
 		canvas.DrawText( "Monkey2 Side Scrolling Demo by Leo Santos. Press space to shoot, 'T' to toggle render to texture and 'D' to display debug info.", 200, 100 )
 		
 		canvas.Alpha = 0.25
-		Parallax = 0.25
+		Parallax = 0.2
 		bgGrid.Draw( canvas, 32, 32, 1.0, CameraRect )
 		
 		canvas.Alpha = 0.5
-		Parallax = 1.0
+		Parallax = 0.75
 		bgGrid.Draw( canvas, 0, 0, 1.0, CameraRect )
 		
 		'Draw all actors
 		canvas.Alpha = 1.0
+		Parallax = 1.0
 		canvas.Color= Color.White
 		Actor.DrawAll( canvas )
 	End

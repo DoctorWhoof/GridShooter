@@ -9,6 +9,8 @@ Using std..
 Class GameGraphics Abstract
 
 	Field images		:Image[]	'The array containing all frames
+	Field pixelPerfect := True		'Rounds fractional coordinates to integers
+
 	Field debug := False		
 	
 	Protected
