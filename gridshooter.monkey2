@@ -3,7 +3,7 @@
 '   More importantly, do not claim to have created any of it, unless you modify it substantially.
 '   Thanks!
 
-#Import "gamegraphics/gamegraphics"
+#Import "src/gamegraphics"
 #Import "src/renderwindow"
 #Import "src/actor"
 #Import "src/player"
@@ -41,7 +41,7 @@ Class Game Extends RenderWindow
 	Field colorTint:= New Color( 0.25, 1.0, 0.5 )
 	
 	Method New()					
-		Super.New( "Test", 420, 240, False, True )		'name, width, height, filterTextures, renderToTexture
+		Super.New( "Test", 420, 240, False, False )		'name, width, height, filterTextures, renderToTexture
 		Layout = "letterbox-int"
 	End
 	
@@ -92,6 +92,8 @@ Class Game Extends RenderWindow
 		Next
 		Bullet.player = hero
 		Bullet.cullDistance = Width
+		
+		ToggleDebug()
 	End
 	
 	
@@ -109,14 +111,7 @@ Class Game Extends RenderWindow
 		Actor.UpdateAll()
 		
 		'Display debug info
-		If Keyboard.KeyHit( Key.D )
-			debug = Not debug
-			bg.debug = debug
-			bgGrid.debug = debug
-			heroSprite.debug = debug
-			orbSprite.debug = debug
-			Bullet.debug = debug		'this one draws the collider via Bullet.OnDraw()
-		End
+		If Keyboard.KeyHit( Key.D ) Then ToggleDebug()
 		
 		'Toggle render to texture
 		If Keyboard.KeyHit( Key.T ) Then renderToTexture = Not renderToTexture
@@ -149,6 +144,17 @@ Class Game Extends RenderWindow
 		canvas.Color= Color.White
 		Actor.DrawAll( canvas )
 	End
+	
+	
+	Method ToggleDebug()
+		debug = Not debug
+		bg.debug = debug
+		bgGrid.debug = debug
+		heroSprite.debug = debug
+		orbSprite.debug = debug
+		Bullet.debug = debug		'this one draws the collider via Bullet.OnDraw()
+	End
+	
 End
 
 

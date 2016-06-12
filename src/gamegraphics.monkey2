@@ -1,7 +1,7 @@
 
 #Import "<mojo>"
-#Import "src/sprite"
-#Import "src/background"
+#Import "graphics/sprite"
+#Import "graphics/background"
 
 Using mojo..
 Using std..

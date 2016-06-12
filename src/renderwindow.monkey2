@@ -23,13 +23,14 @@ Class RenderWindow Extends Window
 	Field filterTextures := True				'Turns on/off texture smoothing. Off for pixel art.
 	Field bgColor := Color.DarkGrey				'Background color
 	Field borderColor := Color.Black 			'Letterboxing border color
-	Field debug := False						'Toggles display of debug info ( Echo() )
+	
+	Global debug := False						'Toggles display of debug info ( Echo() )
 	
 	Protected
 	
 	Global _echoStack:= New Stack<String>		'Contains all the text messages to be displayed
 	
-	Field _init := False
+	Field _init := False						'Allows init code to run only once
 	Field _firstFrame := True					'Ensures OnCreate only runs after Window has properly initialized
 	Field _flags :TextureFlags					'flags used on the render texture
 	
@@ -40,10 +41,7 @@ Class RenderWindow Extends Window
 	Field _mouse := New Vec2i					'temporarily stores mouse coords
 	Field _adjustedMouse := New Vec2i			'Mouse corrected for layout style and camera position
 	Field _layerInitiated := False
-	
-	Field _width:Int, _height:Int				'Temporarily stores width and height so that init can occur at first frame
-
-	
+		
 	Field _fps	:= 60							'fps counter
 	Field _fpscount	:= 0.0						'temporary fps counter
 	Field _tick := 0							'Only stores the current time once every second
@@ -53,8 +51,14 @@ Class RenderWindow Extends Window
 	Field _textureCanvas :Canvas				'Canvas that uses _renderImage
 	Field _windowCanvas: Canvas					'main window canvas
 	
-	Public
+	Field _updateDuration:Float					'time elapsed for one frame update, in float millisecs
+	Field _renderDuration:Float					'time elapsed for one frame render, in float millisecs
+	Field _lastUpdateStart:Int					'when the last update started, in microsecs
+	Field _lastRenderStart:Int					'when the last render started, in microsecs
 	
+	Field _width:Int, _height:Int				'Temporarily stores width and height so that init can occur at first frame, after New()
+
+	Public
 	
 	'**************************************************** Properties ****************************************************
 	
@@ -140,19 +144,24 @@ Class RenderWindow Extends Window
 		Self._windowCanvas = windowCanvas
 		
 		If Not _init
+			'Basic initialization, creates texture canvas, set resolution, etc.
 			_init = True
 			SetVirtualResolution( _width, _height )
-			SelectCanvas()	
 			Return
 		Else
 			If _firstFrame
+				'This only runs after Window finishes initializing properly, otherwise things like Width aren't set correctly
 				_firstFrame = False
+				'Calls OnCreate()
 				SendStartEvent()
 				Return
 			End
+			'picks the appropriate rendering canvas. Just do all your drawing on 'canvas'.
 			SelectCanvas()
 		End
 		
+		'Calls OnUpdate()
+		_lastUpdateStart = Microsecs()
 		SendUpdateEvent()
 		
 		'Mouse in world coordinates
@@ -161,7 +170,11 @@ Class RenderWindow Extends Window
 		_adjustedMouse.y = _mouse.y + camera.Top
 		
 		'the Parallax property will always set the canvas translation before drawing.
-		Parallax = 1.0		
+		Parallax = 1.0
+		
+		'Finished timing the current update, starts rendering
+		_updateDuration = ( Microsecs() - _lastUpdateStart ) / 1000.0
+		_lastRenderStart = Microsecs()	
 		SendDrawEvent()
 		
 		''Closes' the drawing for any parallax layer
@@ -181,8 +194,12 @@ Class RenderWindow Extends Window
 		_textureCanvas.Color = Color.White
 		_windowCanvas.Color = Color.White
 		
+		'Finishes timing the current render before messages are displayed (not 100% accurate, but good enough)
+		_renderDuration = ( Microsecs() - _lastRenderStart ) / 1000.0
+		
 		'Draw message stack, then clear it every frame
-		If debug Then DebugInfo()
+'   		If debug Then DebugInfo()
+		DebugInfo()
 		Local y := 2
 		For Local t := Eachin _echoStack
 			_windowCanvas.DrawText( t, 5, y )
@@ -265,6 +282,7 @@ Class RenderWindow Extends Window
 	End
 	
 	Method DebugInfo() Virtual
+		Echo( "Update time: " + Cast<String>( _updateDuration ).Slice( 0, 5 ) + "ms, Render time:" + Cast<String>( _renderDuration ).Slice( 0, 5 ) + "ms")
 		Echo( "Window resolution: " + Frame.Width + ", " + Frame.Height )
 		Echo( "Virtual resolution: " + Width + ", " + Height )
 		Echo( "Camera: " + camera.ToString() )
@@ -302,8 +320,10 @@ Class RenderWindow Extends Window
 
 	'**************************************************** Static functions ****************************************************
 	
-	Function Echo( text:String )
-		_echoStack.Push( text )
+	Function Echo( text:String, ignoreDebug:Bool = False )
+		If debug Or ignoreDebug
+			_echoStack.Push( text )
+		End
 	End
 	
 End
